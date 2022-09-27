@@ -31,11 +31,9 @@ export class UsersController {
     return this.usersService.registerUser(userDto);
   }
 
-  @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Request() req) {
-    console.log(req.user);
-    return this.authService.login(req.user);
+    return this.authService.login(req.body);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -45,6 +43,7 @@ export class UsersController {
   }
 
 
+  @UseGuards(JwtAuthGuard)
   @Put('/user/:id')
   async updateUser(
     @Param('id') id: string,
@@ -53,8 +52,8 @@ export class UsersController {
     return this.usersService.updateUser(id, updateData);
   }
 
-
-  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @Delete('user/:id')
   async deleteUser(@Param('id') id: string) {
     return this.usersService.deleteUser(id);
   }

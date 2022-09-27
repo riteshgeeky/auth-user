@@ -38,7 +38,7 @@ export class UsersService {
 
   // deleting the data 
   async deleteUser(id){
-    return this.userModel.findByIdAndRemove(id)
+    return this.userModel.findByIdAndRemove(id).select('-password')
   }
 
 }
