@@ -15,6 +15,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { LocalAuthGuard } from '../auth/local-auth.guard';
 import { AuthService } from '../auth/auth.service';
 import { UserUpdateDto } from './userUpdate.dto';
+import { UserRegisterDto } from './dtos/userRegisterDto';
 
 
 
@@ -27,19 +28,33 @@ export class UsersController {
   ) {}
 
   @Post('register')
-  async registerUser(@Body() userDto: User) {
+  async registerUser(@Body() userDto: UserRegisterDto) {
     return this.usersService.registerUser(userDto);
   }
+
+
 
   @Post('auth/login')
   async login(@Request() req) {
     return this.authService.login(req.body);
   }
 
+  @Get('users')
+  async getAllUser() {
+    return this.usersService.getAllUser();
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
+  }
+
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('user/:id')
+  async deleteUser(@Param('id') id: string) {
+    return this.usersService.deleteUser(id);
   }
 
 
@@ -52,11 +67,20 @@ export class UsersController {
     return this.usersService.updateUser(id, updateData);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Delete('user/:id')
-  async deleteUser(@Param('id') id: string) {
-    return this.usersService.deleteUser(id);
+
+  @Post('forgetPasswordOtp')
+  async getForgetPasswordOtp(@Body('email') email: string) {
+    const otp= await this.usersService.getForgetPasswordOtp(email);
+    return {
+      otp: otp,
+    };
   }
+
+  @Post('passwordreset')
+  async passwordReset(@Body('email') email: string, @Body('otp') otp: string, @Body('password') password: string) {
+    return this.usersService.passwordReset(email, otp, password);
+  }
+
 
 
 }

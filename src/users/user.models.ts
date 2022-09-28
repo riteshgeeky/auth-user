@@ -15,6 +15,11 @@ export class User{
     email: string;
     @Prop({default: Date.now})
     date_added: Date;
+    @Prop()
+    forgetPasswordOtp: string;
+    @Prop({default: Date.now})
+    forgetPasswordExpiry: Date;
+   
 }
 
 export const UserSchema=SchemaFactory.createForClass(User);
